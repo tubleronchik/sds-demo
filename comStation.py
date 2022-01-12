@@ -22,6 +22,8 @@ class COMStation:
     def __init__(self) -> None:
         self.sensor = SDS011(CONFIG["port"])
         self.q = deque(maxlen=1)
+        work_period = int(CONFIG["work_period"])
+        self.sensor.set_work_period(work_time=int(work_period / 60))
         threading.Thread(target=_read_data_thread, args=(self.sensor, self.q)).start()
 
     def get_data(self) -> tp.Tuple[float, float]:
@@ -31,8 +33,10 @@ class COMStation:
             pm = values[0]
             pm25 = pm[0]
             pm10 = pm[1]
-        return pm25, pm10
+        return (pm25, pm10)
 
 if __name__ == "__main__":
     s = COMStation()
-    threading.Thread(target=s.get_data).start()
+    while True:
+        time.sleep(5)
+        s.get_data()

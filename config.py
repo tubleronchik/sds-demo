@@ -1,3 +1,4 @@
 CONFIG = {
-    "port": ""
+    "port": "",
+    "work_period":300
 }
