@@ -25,6 +25,7 @@ class COMStation:
         threading.Thread(target=_read_data_thread, args=(self.sensor, self.q)).start()
 
     def get_data(self) -> tp.Tuple[float, float]:
+        threading.Timer(self.get_data, 60)
         if self.q:
             values = self.q[0]
             pm = values[0]
@@ -34,4 +35,4 @@ class COMStation:
 
 if __name__ == "__main__":
     s = COMStation()
-    threading.Thread(s.get_data, 60).start()
+    threading.Thread(s.get_data).start()
