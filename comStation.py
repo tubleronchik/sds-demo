@@ -1,12 +1,13 @@
 import threading
 import time
 from collections import deque
+import typing as tp
 
 from drivers.sds011 import SDS011
 from config import CONFIG
 
 
-def _read_data_thread(sensor: SDS011, q: deque):
+def _read_data_thread(sensor: SDS011, q: deque) -> None:
     while True:
         meas = sensor.query()
         timestamp = int(time.time())
@@ -18,12 +19,12 @@ class COMStation:
     Reads data from a serial port
     """
 
-    def __init__(self, config: dict):
+    def __init__(self) -> None:
         self.sensor = SDS011(CONFIG["port"])
         self.q = deque(maxlen=1)
         threading.Thread(target=_read_data_thread, args=(self.sensor, self.q)).start()
 
-    def get_data(self):
+    def get_data(self) -> tp.Tuple[float, float]:
         if self.q:
             values = self.q[0]
             pm = values[0]
