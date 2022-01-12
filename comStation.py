@@ -31,3 +31,7 @@ class COMStation:
             pm25 = pm[0]
             pm10 = pm[1]
         return pm25, pm10
+
+if __name__ == "__main__":
+    s = COMStation()
+    threading.Thread(s.get_data, 60).start()
